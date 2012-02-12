@@ -6,8 +6,8 @@
  * of the given gridSize.
  */
 Crafty.c("fourwaysnap", {
-	__move: {left: false, right: false, up: false, down: false},
-	_speed: 4,
+    __move: {left: false, right: false, up: false, down: false},
+    _speed: 4,
     _gridSize: 32,
     _motion: 0, // 0 = stopped; 1-4 = up, right, down, left
     _ticksPerSnap: 8,
@@ -15,24 +15,24 @@ Crafty.c("fourwaysnap", {
     _nextSnapPos: null,
     _lastSnapPos: null,
 
-	init: function() {
-		if(!this.has("controls")) {
+    init: function() {
+        if(!this.has("controls")) {
             this.addComponent("controls");
         }
-	},
+    },
 
-	fourwaysnap: function(speed, gridSize) {
-		if(speed) {
+    fourwaysnap: function(speed, gridSize) {
+        if(speed) {
             this._speed = speed;
         }
         if (gridSize) {
             this._gridSize = gridSize;
             this._ticksPerSnap = gridSize / this._speed;
         }
-		var move = this.__move;
+        var move = this.__move;
 
 
-		this.bind("EnterFrame", function() {
+        this.bind("EnterFrame", function() {
             var old = this.pos(),
                 changed = false;
 
@@ -98,44 +98,44 @@ Crafty.c("fourwaysnap", {
                 };
                 this._ticksRemaining = this._ticksPerSnap;
             }
-		}).bind("KeyDown", function(e) {
-			if (e.keyCode === Crafty.keys.RIGHT_ARROW ||
+        }).bind("KeyDown", function(e) {
+            if (e.keyCode === Crafty.keys.RIGHT_ARROW ||
               e.keyCode === Crafty.keys.D) {
-				move.right = true;
-			}
-			if (e.keyCode === Crafty.keys.LEFT_ARROW ||
+                move.right = true;
+            }
+            if (e.keyCode === Crafty.keys.LEFT_ARROW ||
               e.keyCode === Crafty.keys.A) {
-				move.left = true;
-			}
-			if (e.keyCode === Crafty.keys.UP_ARROW ||
+                move.left = true;
+            }
+            if (e.keyCode === Crafty.keys.UP_ARROW ||
               e.keyCode === Crafty.keys.W) {
-				move.up = true;
-			}
-			if (e.keyCode === Crafty.keys.DOWN_ARROW ||
+                move.up = true;
+            }
+            if (e.keyCode === Crafty.keys.DOWN_ARROW ||
               e.keyCode === Crafty.keys.S) {
-				move.down = true;
-			}
-		}).bind("KeyUp", function(e) {
-			if (e.keyCode === Crafty.keys.RIGHT_ARROW ||
+                move.down = true;
+            }
+        }).bind("KeyUp", function(e) {
+            if (e.keyCode === Crafty.keys.RIGHT_ARROW ||
               e.keyCode === Crafty.keys.D) {
-				move.right = false;
-			}
-			if (e.keyCode === Crafty.keys.LEFT_ARROW ||
+                move.right = false;
+            }
+            if (e.keyCode === Crafty.keys.LEFT_ARROW ||
               e.keyCode === Crafty.keys.A) {
-				move.left = false;
-			}
-			if (e.keyCode === Crafty.keys.UP_ARROW ||
+                move.left = false;
+            }
+            if (e.keyCode === Crafty.keys.UP_ARROW ||
               e.keyCode === Crafty.keys.W) {
-				move.up = false;
-			}
-			if (e.keyCode === Crafty.keys.DOWN_ARROW ||
+                move.up = false;
+            }
+            if (e.keyCode === Crafty.keys.DOWN_ARROW ||
               e.keyCode === Crafty.keys.S) {
-				move.down = false;
-			}
-		});
+                move.down = false;
+            }
+        });
 
-		return this;
-	},
+        return this;
+    },
 
     moveUp: function() {
         this._motion = 1;
