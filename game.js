@@ -15,9 +15,12 @@ SKB.conf = {
     GAME_HEIGHT:    12
 }
 
-SKB.init = function() {
+SKB.game = function() {
     var conf = SKB.conf;
-    Crafty.init([conf.GAME_WIDTH * conf.TILE, conf.GAME_HEIGHT * conf.TILE]);
+    Crafty.init([
+        conf.GAME_WIDTH * conf.TILE,
+        conf.GAME_HEIGHT * conf.TILE
+    ]);
     Crafty.sprite(conf.TILE, 'sprites.png', {
         player: [0, 0],
         wall: [0, 1],
@@ -25,71 +28,93 @@ SKB.init = function() {
         lightBlock: [0, 3]
     });
 };
+SKB.game.prototype = {
+    loadLevel: function(levelNum) {
+        var name = 'level' + levelNum,
+            map = new SKB.map();
 
-SKB.loadLevel = function(level) {
-    var name = 'level' + level;
+        if (Crafty._scenes[name]) {
+            // already loaded
+            Crafty.scene(name);
+            return;
+        }
 
-    if (Crafty._scenes[name]) {
-        // already loaded
-        Crafty.scene(name);
-        return;
-    }
-
-    Crafty.scene(name, function() {
         $.get(name + '.json', function(data) {
-            for (r = 0; r < SKB.conf.GAME_HEIGHT; r++) {
-                for (c = 0; c < SKB.conf.GAME_WIDTH; c++) {
-                    if (data[r] && data[r][c]) {
-                        SKB.loadTile(r, c, data[r][c]);
-                    } else {
-                        SKB.loadTile(r, c, 'x');
-                    }
-                }
-            }
-                    
+            Crafty.scene(name, function() {
+                map.deserializeLevel(data);
+            });
+            Crafty.scene(name);
         }, 'json')
         .error(function() {
             if (!console || !console.log) { return; }
             console.log('Error loading level: ' + name + '.json');
         });
-    });
-    Crafty.scene(name);
+    }
 };
 
-SKB.loadTile = function(r, c, data) {
-    for (i = 0; i < data.length; i++) {
-        var char = data.charAt(i);
-        if (char === 'x') {
-            SKB.wallEntity(r, c);
-        } else if (char === 'p') {
-            SKB.playerEntity(r, c);
+SKB.map = function() {
+    this.loader = new SKB.entityLoader();
+    this.test = 'TEST';
+};
+SKB.map.prototype = {
+    deserializeLevel: function(data) {
+        Crafty.scene(name, $.proxy(function() {
+            for (r = 0; r < SKB.conf.GAME_HEIGHT; r++) {
+                for (c = 0; c < SKB.conf.GAME_WIDTH; c++) {
+                    if (data[r] && data[r][c]) {
+                        this.deserializeTile(r, c, data[r][c]);
+                    } else {
+                        this.deserializeTile(r, c, 'x');
+                    }
+                }
+            }
+                    
+        }, this));
+        Crafty.scene(name);
+    },
+
+    deserializeTile: function(r, c, data) {
+        for (i = 0; i < data.length; i++) {
+            var char = data.charAt(i);
+            if (char === 'x') {
+                this.loader.wall(r, c);
+            } else if (char === 'p') {
+                this.loader.player(r, c);
+            }
+        }
+    },
+
+    serializeTile: function() {
+        console.log("map.serializeTile() not yet implemented");
+    }
+};
+
+SKB.entityLoader = function() {
+};
+SKB.entityLoader.prototype = {
+    wall: function(r, c) {
+        var wall = Crafty.e();
+        wall.addComponent("2D, DOM, wall");
+        wall.attr(this._attributes(r, c));
+    },
+
+    player: function(r, c) {
+        return Crafty.e("2D, DOM, player, controls, collision, fourwaysnap")
+                     .attr(this._attributes(r, c))
+                     .fourwaysnap(4, SKB.conf.TILE);
+    },
+
+    _attributes: function(r, c) {
+        return {
+            x: c * SKB.conf.TILE,
+            y: r * SKB.conf.TILE,
+            w: SKB.conf.TILE,
+            h: SKB.conf.TILE
         }
     }
 };
 
-SKB.wallEntity = function(r, c) {
-    var wall = Crafty.e();
-    wall.addComponent("2D, DOM, wall");
-    wall.attr(SKB.attributes(r, c));
-};
-
-SKB.playerEntity = function(r, c) {
-    return Crafty.e("2D, DOM, player, controls, collision, fourwaysnap")
-                 .attr(SKB.attributes(r, c))
-                 .fourwaysnap(4, SKB.conf.TILE);
-};
-
-SKB.attributes = function(r, c) {
-    return {
-        x: c * SKB.conf.TILE,
-        y: r * SKB.conf.TILE,
-        w: SKB.conf.TILE,
-        h: SKB.conf.TILE
-    }
-};
-
 window.onload = function() {
-    SKB.init();
-
-    SKB.loadLevel(1);
+    var game = new SKB.game();
+    game.loadLevel(1);
 }
