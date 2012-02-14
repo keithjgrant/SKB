@@ -21,7 +21,7 @@ SKB.game = function() {
         conf.GAME_WIDTH * conf.TILE,
         conf.GAME_HEIGHT * conf.TILE
     ]);
-    Crafty.sprite(conf.TILE, 'sprites.png', {
+    Crafty.sprite(conf.TILE, '/images/skb/sprites.png', {
         player: [0, 0],
         wall: [0, 1],
         block: [0, 1], // TODO
