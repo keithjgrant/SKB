@@ -2,8 +2,7 @@ if (typeof SKB === 'undefined') {
     SKB = {}
 }
 
-SKB.entityLoader = function() {
-};
+SKB.entityLoader = function() {}
 SKB.entityLoader.prototype = {
     wall: function(c, r) {
         return Crafty.e("2D, DOM, wall")
@@ -16,13 +15,14 @@ SKB.entityLoader.prototype = {
     },
 
     player: function(c, r) {
-        var p = Crafty.e("2D, DOM, player, controls, Collision, fourwaysnap")
+        var p = Crafty.e("2D, DOM, player, PlayerControls, Collision, fourwaysnap")
             .attr(this._attributes(c, r))
             .fourwaysnap(4, SKB.conf.TILE);
         p.collision()
          .onHit('wall', function() {
             this.stop();
-        }).onHit('block', function() {
+        }).onHit('block', function(objects) {
+            var block = objects[0].obj;
         });
 
         return p;
