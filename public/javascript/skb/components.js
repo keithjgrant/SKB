@@ -33,6 +33,7 @@ Crafty.c("fourwaysnap", {
         this.bind("EnterFrame", function() {
             var old = this.pos(),
                 changed = false;
+
             if (this._motion && this._ticksRemaining === 1) {
                 // final frame -- don't step past landing tile
                 this.x = this._nextSnapPos.x,
@@ -108,8 +109,10 @@ Crafty.c("fourwaysnap", {
     stop: function() {
         this._motion = 0;
         this._ticksRemaining = 0;
-        this.x = this._lastSnapPos.x;
-        this.y = this._lastSnapPos.y;
+        if (this._lastSnapPos) {
+            this.x = this._lastSnapPos.x;
+            this.y = this._lastSnapPos.y;
+        }
     }
 });
 
@@ -183,6 +186,9 @@ Crafty.c("block", {
     init: function() {
         if (!this.has("fourwaysnap")) {
             this.addComponent("fourwaysnap");
+        }
+        if (!this.has("Collision")) {
+            this.addComponent("Collision");
         }
     }
 });

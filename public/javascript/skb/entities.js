@@ -10,9 +10,18 @@ SKB.entityLoader.prototype = {
     },
 
     block: function(c, r) {
-        return Crafty.e("2D, DOM, block, fourwaysnap")
+        var b = Crafty.e("2D, DOM, block, fourwaysnap, Collision")
             .attr(this._attributes(c, r))
             .fourwaysnap(4, SKB.conf.TILE);
+
+        b.onHit('wall', function() {
+            this.stop();
+            SKB.player.stop();
+        });
+        b.onHit('block', function() {
+            this.stop();
+            SKB.player.stop();
+        });
     },
 
     player: function(c, r) {
@@ -20,8 +29,7 @@ SKB.entityLoader.prototype = {
             .attr(this._attributes(c, r))
             .fourwaysnap(4, SKB.conf.TILE);
 
-        p.collision()
-         .onHit('wall', function() {
+        p.onHit('wall', function() {
             this.stop();
         }).onHit('block', function(objects) {
             var block = objects[0].obj;
@@ -37,6 +45,7 @@ SKB.entityLoader.prototype = {
             }
         });
 
+        SKB.player = p;
         return p;
     },
 
