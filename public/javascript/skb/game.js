@@ -9,7 +9,6 @@ if (typeof SKB === 'undefined') {
 }
 
 SKB.conf = {
-    GAME_TICK:      30, // game cycles per second?
     TILE:           32,
     GAME_WIDTH:     16,
     GAME_HEIGHT:    12
@@ -24,7 +23,7 @@ SKB.game = function() {
     Crafty.sprite(conf.TILE, '/images/skb/sprites.png', {
         player: [0, 0],
         wall: [0, 1],
-        block: [0, 1], // TODO
+        block: [1, 0],
         darkBlock: [0, 2],
         lightBlock: [0, 3]
     });
