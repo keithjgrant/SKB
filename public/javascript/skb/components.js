@@ -181,24 +181,6 @@ Crafty.c("PlayerControls", {
     
 });
 
-Crafty.c("map", {
-
-    init: function() {
-        this.grid = new Array(SKB.conf.GAME_WIDTH);
-        for (i in this.grid) {
-            this.grid[i] = new Array(SKB.conf.GAME_HEIGHT);
-        }
-    },
-
-    setTile: function(entity, c, r) {
-        this.grid[c][r] = entity;
-    },
-
-    getTile: function(c, r) {
-        return this.grid[c][r];
-    }
-});
-
 Crafty.c("block", {
     
     init: function() {

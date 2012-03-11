@@ -5,11 +5,8 @@ if (typeof SKB === 'undefined') {
 SKB.entityLoader = function() {}
 SKB.entityLoader.prototype = {
     wall: function(c, r) {
-        var w = Crafty.e("2D, DOM, wall")
-                .attr(this._attributes(c, r));
-
-        SKB.map.setTile(w, c, r);
-        return w;
+        return Crafty.e("2D, DOM, wall")
+            .attr(this._attributes(c, r));
     },
 
     block: function(c, r) {
@@ -25,9 +22,6 @@ SKB.entityLoader.prototype = {
             this.stop();
             SKB.player.stop();
         });
-
-        SKB.map.setTile(b, c, r);
-        return b;
     },
 
     player: function(c, r) {
@@ -53,15 +47,6 @@ SKB.entityLoader.prototype = {
 
         SKB.player = p;
         return p;
-    },
-
-    map: function() {
-        var boardWidth = SKB.conf.TILE * SKB.conf.GAME_WIDTH,
-            boardHeight = SKB.conf.TILE * SKB.conf.GAME_HEIGHT,
-            m = Crafty.e("2D, DOM, map")
-                .attr({x: 0, y: 0, w: boardWidth, h: boardHeight });
-
-        return m;
     },
 
     _attributes: function(c, r) {
