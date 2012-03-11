@@ -9,10 +9,15 @@ SKB.entityLoader.prototype = {
             .attr(this._attributes(c, r));
     },
 
-    block: function(c, r) {
+    block: function(c, r, color) {
         var b = Crafty.e("2D, DOM, block, fourwaysnap, Collision")
             .attr(this._attributes(c, r))
             .fourwaysnap(4, SKB.conf.TILE);
+        b.color = color;
+        if (color === SKB.LIGHT) {
+            // TODO better place to store these coords?
+            b.sprite(1, 1);
+        }
 
         b.onHit('wall', function() {
             this.stop();

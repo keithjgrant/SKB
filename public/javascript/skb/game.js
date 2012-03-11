@@ -14,6 +14,9 @@ SKB.conf = {
     GAME_HEIGHT:    12
 }
 
+SKB.LIGHT = 'light';
+SKB.DARK = 'dark';
+
 SKB.game = function() {
     var conf = SKB.conf;
     Crafty.init([
@@ -97,9 +100,11 @@ SKB.map.prototype = {
         if (tile == 0) {
             this.loader.wall(c, r);
         } else if (tile == 1) {
-            this.loader.block(c, r);
+            this.loader.block(c, r, SKB.DARK);
         } else if (tile == 2) {
-            this.loader.goalBlock(c, r);
+            this.loader.goalBlock(c, r, SKB.DARK);
+        } else if (tile == 3) {
+            this.loader.block(c, r, SKB.LIGHT);
         }
     },
 
@@ -111,6 +116,35 @@ SKB.map.prototype = {
     },
 
     addGate: function(def) {
+    },
+
+    tileAt: function(c, r) {
+        var coords = {
+            _x: c * SKB.conf.TILE,
+            _y: r * SKB.conf.TILE,
+            _w: SKB.conf.TILE,
+            _h: SKB.conf.TILE
+        },
+            match = Crafty.map.search(coords);
+
+        if (match.length > 1) {
+            console.log('Multiple blocks found at ('+c+', '+r+')');
+        }
+        return match[0];
+    },
+
+    /**
+     * Returns true if blocks at both coordinates are the same type
+     */
+    blocksMatch: function(coordsA, coordsB) {
+        var blockA = this.tileAt(coordsA),
+            blockB = this.tileAt(coordsB);
+
+        if (!blockA.has('block') || !blockB.has('block')) {
+            return false;
+        }
+
+        return blockA.color === blockB.color;
     }
 };
 
