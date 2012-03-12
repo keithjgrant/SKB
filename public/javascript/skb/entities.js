@@ -19,14 +19,14 @@ SKB.entityLoader.prototype = {
             b.sprite(1, 1);
         }
 
-        b.onHit('wall', function() {
+        /*b.onHit('wall', function() {
             this.stop();
             SKB.player.stop();
         });
         b.onHit('block', function() {
             this.stop();
             SKB.player.stop();
-        });
+        });*/
     },
 
     player: function(c, r) {
@@ -36,7 +36,8 @@ SKB.entityLoader.prototype = {
 
         p.onHit('wall', function() {
             this.stop();
-        }).onHit('block', function(objects) {
+        });
+        /*p.onHit('block', function(objects) {
             var block = objects[0].obj;
 
             if (this._motion === 1) {
@@ -48,7 +49,7 @@ SKB.entityLoader.prototype = {
             } else if (this._motion === 4) {
                 block.moveLeft();
             }
-        });
+        });*/
 
         SKB.player = p;
         return p;

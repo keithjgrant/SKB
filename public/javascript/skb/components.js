@@ -84,7 +84,16 @@ Crafty.c("fourwaysnap", {
 
     moveLeft: function() {
         this._moveToPosition(4, this.x - this._gridSize, this.y);
-    },        
+    },
+
+    getCoords: function() {
+        return {
+            x: this.x,
+            y: this.y,
+            c: Math.floor(this.x / this._gridSize),
+            r: Math.floor(this.y / this._gridSize)
+        };
+    },
 
     _moveToPosition: function(direction, x, y) {
         if (this._motion) {
@@ -131,16 +140,16 @@ Crafty.c("PlayerControls", {
         this.bind("EnterFrame", function() {
             // move entity based on active input
             if(move.up) {
-                this.moveUp();
+                this.tryMoveUp();
             }
             if(move.right) {
-                this.moveRight();
+                this.tryMoveRight();
             }
             if(move.down) {
-                this.moveDown();
+                this.tryMoveDown();
             }
             if(move.left) {
-                this.moveLeft();
+                this.tryMoveLeft();
             }
         }).bind("KeyDown", function(e) {
             if (e.keyCode === Crafty.keys.RIGHT_ARROW ||
@@ -177,8 +186,44 @@ Crafty.c("PlayerControls", {
                 move.down = false;
             }
         });
-    }
-    
+    },
+
+    tryMoveUp: function() {
+        var current = SKB.player.getCoords(),
+            next = {
+                c: current.c,
+                r: current.r - 1
+            },
+            second = {
+                c: current.c,
+                r: current.r - 2
+            };
+
+        if (SKB.util.blocksMatch(current, next)) {
+            this.moveUp();
+        } else if (SKB.util.blocksMatch(current, second)) {
+            var pushBlock = SKB.util.tileAt(next.c, next.r);
+
+            if (pushBlock && pushBlock.has('block')) {
+                nextBlock = SKB.util.tileAt(second.c, second.r);
+                nextBlock.moveDown();
+                pushBlock.moveUp();
+                this.moveUp();
+            }
+        }
+    },
+
+    tryMoveRight: function() {
+        this.moveRight();
+    },
+
+    tryMoveDown: function() {
+        this.moveDown();
+    },
+
+    tryMoveLeft: function() {
+        this.moveLeft();
+    }    
 });
 
 Crafty.c("block", {

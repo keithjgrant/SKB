@@ -116,7 +116,10 @@ SKB.map.prototype = {
     },
 
     addGate: function(def) {
-    },
+    }
+};
+
+SKB.util = {
 
     tileAt: function(c, r) {
         var coords = {
@@ -137,10 +140,11 @@ SKB.map.prototype = {
      * Returns true if blocks at both coordinates are the same type
      */
     blocksMatch: function(coordsA, coordsB) {
-        var blockA = this.tileAt(coordsA),
-            blockB = this.tileAt(coordsB);
+        var blockA = this.tileAt(coordsA.c, coordsA.r),
+            blockB = this.tileAt(coordsB.c, coordsB.r);
 
-        if (!blockA.has('block') || !blockB.has('block')) {
+        if (!blockA || !blockB ||
+          !blockA.has('block') || !blockB.has('block')) {
             return false;
         }
 
