@@ -190,40 +190,86 @@ Crafty.c("PlayerControls", {
 
     tryMoveUp: function() {
         var current = SKB.player.getCoords(),
-            next = {
-                c: current.c,
-                r: current.r - 1
-            },
-            second = {
-                c: current.c,
-                r: current.r - 2
-            };
+            next    = { c: current.c, r: current.r - 1 },
+            second  = { c: current.c, r: current.r - 2 },
+            pushBlock = false;
 
-        if (SKB.util.blocksMatch(current, next)) {
+        if (this._canMove(current, next)) {
             this.moveUp();
-        } else if (SKB.util.blocksMatch(current, second)) {
-            var pushBlock = SKB.util.tileAt(next.c, next.r);
-
-            if (pushBlock && pushBlock.has('block')) {
-                nextBlock = SKB.util.tileAt(second.c, second.r);
-                nextBlock.moveDown();
-                pushBlock.moveUp();
-                this.moveUp();
-            }
+        } else if (pushBlock = this._canPush(current, next, second)) {
+            var nextBlock = SKB.util.tileAt(second.c, second.r);
+            this.moveUp();
+            pushBlock.moveUp();
+            nextBlock.moveDown();
         }
     },
 
     tryMoveRight: function() {
-        this.moveRight();
+        var current = SKB.player.getCoords(),
+            next    = { c: current.c + 1, r: current.r },
+            second  = { c: current.c + 2, r: current.r },
+            pushBlock = false;
+
+        if (this._canMove(current, next)) {
+            this.moveRight();
+        } else if (pushBlock = this._canPush(current, next, second)) {
+            var nextBlock = SKB.util.tileAt(second.c, second.r);
+            this.moveRight();
+            pushBlock.moveRight();
+            nextBlock.moveLeft();
+        }
     },
 
     tryMoveDown: function() {
-        this.moveDown();
+        var current = SKB.player.getCoords(),
+            next    = { c: current.c, r: current.r + 1 },
+            second  = { c: current.c, r: current.r + 2 },
+            pushBlock = false;
+
+        if (this._canMove(current, next)) {
+            this.moveDown();
+        } else if (pushBlock = this._canPush(current, next, second)) {
+            var nextBlock = SKB.util.tileAt(second.c, second.r);
+            this.moveDown();
+            pushBlock.moveDown();
+            nextBlock.moveUp();
+        }
     },
 
     tryMoveLeft: function() {
-        this.moveLeft();
-    }    
+        var current = SKB.player.getCoords(),
+            next    = { c: current.c - 1, r: current.r },
+            second  = { c: current.c - 2, r: current.r },
+            pushBlock = false;
+
+        if (this._canMove(current, next)) {
+            this.moveLeft();
+        } else if (pushBlock = this._canPush(current, next, second)) {
+            var nextBlock = SKB.util.tileAt(second.c, second.r);
+            this.moveLeft();
+            pushBlock.moveLeft();
+            nextBlock.moveRight();
+        }
+    },
+
+    _canMove: function(from, to) {
+        return SKB.util.blocksMatch(from, to);
+    },
+
+    // returns the block to push if it is pushable, false otherwise
+    _canPush: function(from, to, next) {
+        if (!SKB.util.blocksMatch(from, next)) {
+            return false;
+        }
+
+        var pushBlock = SKB.util.tileAt(to.c, to.r);
+
+        if (pushBlock && pushBlock.has('block')) {
+            return pushBlock;
+        }
+
+        return false;
+    }
 });
 
 Crafty.c("block", {
