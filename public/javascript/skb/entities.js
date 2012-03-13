@@ -18,15 +18,6 @@ SKB.entityLoader.prototype = {
             // TODO better place to store these coords?
             b.sprite(1, 1);
         }
-
-        /*b.onHit('wall', function() {
-            this.stop();
-            SKB.player.stop();
-        });
-        b.onHit('block', function() {
-            this.stop();
-            SKB.player.stop();
-        });*/
     },
 
     player: function(c, r) {
@@ -37,22 +28,16 @@ SKB.entityLoader.prototype = {
         p.onHit('wall', function() {
             this.stop();
         });
-        /*p.onHit('block', function(objects) {
-            var block = objects[0].obj;
-
-            if (this._motion === 1) {
-                block.moveUp();
-            } else if (this._motion === 2) {
-                block.moveRight();
-            } else if (this._motion === 3) {
-                block.moveDown();
-            } else if (this._motion === 4) {
-                block.moveLeft();
-            }
-        });*/
 
         SKB.player = p;
         return p;
+    },
+
+    gate: function(c, r) {
+        var gate = Crafty.e("2D, DOM, gate")
+            .attr(this._attributes(c, r));
+
+        return gate;
     },
 
     _attributes: function(c, r) {

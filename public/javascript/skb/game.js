@@ -28,7 +28,8 @@ SKB.game = function() {
         wall: [0, 1],
         block: [1, 0],
         darkBlock: [0, 2],
-        lightBlock: [0, 3]
+        lightBlock: [0, 3],
+        gate: [0, 2]
     });
 };
 SKB.game.prototype = {
@@ -67,9 +68,9 @@ SKB.map.prototype = {
      *  2 - dark loop block
      *  3 - light block
      *  4 - light loop block
+     *  5 - gate
      *
      *  goals: {type:<0/1>,c,r}
-     *  gates {orientation:<0-3>,c,r}
      *  player: {c, r}
      */
     deserializeLevel: function(data) {
@@ -105,6 +106,8 @@ SKB.map.prototype = {
             this.loader.goalBlock(c, r, SKB.DARK);
         } else if (tile == 3) {
             this.loader.block(c, r, SKB.LIGHT);
+        } else if (tile == 5) {
+            this.loader.gate(c, r);
         }
     },
 
@@ -114,9 +117,6 @@ SKB.map.prototype = {
 
     addGoal: function(def) {
     },
-
-    addGate: function(def) {
-    }
 };
 
 SKB.util = {
@@ -128,18 +128,18 @@ SKB.util = {
             _w: SKB.conf.TILE,
             _h: SKB.conf.TILE
         },
-            match = Crafty.map.search(coords);
+            match = Crafty.map.search(coords),
+            filter = ['block', 'wall', 'gate'];
         
         for (entity in match) {
-            if (!match[entity].has('block') && !match[entity].has('wall')) {
-                match.splice(entity, 1);
+            for (f in filter) {
+                if (match[entity] && match[entity].has(filter[f])) {
+                    return match[entity];
+                }
             }
         }
 
-        if (match.length > 1) {
-            console.log('Multiple blocks found at ('+c+', '+r+')');
-        }
-        return match[0];
+        return false;
     },
 
     /**

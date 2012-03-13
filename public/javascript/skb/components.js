@@ -253,7 +253,21 @@ Crafty.c("PlayerControls", {
     },
 
     _canMove: function(from, to) {
-        return SKB.util.blocksMatch(from, to);
+        // can step onto block of same color...
+        if (SKB.util.blocksMatch(from, to)) {
+            return true;
+        }
+        // ...or to/from a gate
+        var fromTile = SKB.util.tileAt(from.c, from.r);
+        if (fromTile && fromTile.has('gate')) {
+            return true;
+        }
+        var toTile = SKB.util.tileAt(to.c, to.r);
+        if (toTile && toTile.has('gate')) {
+            return true;
+        }
+
+        return false;
     },
 
     // returns the block to push if it is pushable, false otherwise
