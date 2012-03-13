@@ -129,6 +129,12 @@ SKB.util = {
             _h: SKB.conf.TILE
         },
             match = Crafty.map.search(coords);
+        
+        for (entity in match) {
+            if (!match[entity].has('block') && !match[entity].has('wall')) {
+                match.splice(entity, 1);
+            }
+        }
 
         if (match.length > 1) {
             console.log('Multiple blocks found at ('+c+', '+r+')');
