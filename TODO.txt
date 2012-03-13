@@ -1,0 +1,10 @@
+* Expand block component for light/dark color
+* Create Gateway component
+* Create Goal component
+* Clean up pushing animation
+* Menu Scene(s)
+* Finish & polish image sprites
+* Differentiate blocks of the "active" color - probably with bold outline
+* Level Select Scene
+* "Loading" Scene
+
