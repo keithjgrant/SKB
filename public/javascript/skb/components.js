@@ -138,6 +138,10 @@ Crafty.c("PlayerControls", {
         var move = this.__move;
         
         this.bind("EnterFrame", function() {
+            if (this._motion) {
+                return;
+            }
+
             // move entity based on active input
             if(move.up) {
                 this.tryMoveUp();
