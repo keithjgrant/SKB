@@ -19,6 +19,9 @@ SKB.DARK = 'dark';
 
 SKB.game = function() {
     var conf = SKB.conf;
+    this.map;
+    this.currentMapData;
+
     Crafty.init([
         conf.GAME_WIDTH * conf.TILE,
         conf.GAME_HEIGHT * conf.TILE
@@ -43,16 +46,19 @@ SKB.game.prototype = {
             return;
         }
 
-        $.get(name + '.json', function(data) {
+        $.get(name + '.json', $.proxy(function(data) {
             Crafty.scene(name, function() {
                 map.deserializeLevel(data);
             });
+            this.currentMapData = data;
             Crafty.scene(name);
-        }, 'json')
+        }, this), 'json')
         .error(function() {
             if (!console || !console.log) { return; }
             console.log('Error loading level: ' + name + '.json');
         });
+
+        this.map = map;
     }
 };
 

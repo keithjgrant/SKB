@@ -29,7 +29,6 @@ SKB.entityLoader.prototype = {
             this.stop();
         });
 
-        SKB.player = p;
         return p;
     },
 

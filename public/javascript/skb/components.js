@@ -193,7 +193,7 @@ Crafty.c("PlayerControls", {
     },
 
     tryMoveUp: function() {
-        var current = SKB.player.getCoords(),
+        var current = this.getCoords(),
             next    = { c: current.c, r: current.r - 1 },
             second  = { c: current.c, r: current.r - 2 },
             pushBlock = false;
@@ -209,7 +209,7 @@ Crafty.c("PlayerControls", {
     },
 
     tryMoveRight: function() {
-        var current = SKB.player.getCoords(),
+        var current = this.getCoords(),
             next    = { c: current.c + 1, r: current.r },
             second  = { c: current.c + 2, r: current.r },
             pushBlock = false;
@@ -225,7 +225,7 @@ Crafty.c("PlayerControls", {
     },
 
     tryMoveDown: function() {
-        var current = SKB.player.getCoords(),
+        var current = this.getCoords(),
             next    = { c: current.c, r: current.r + 1 },
             second  = { c: current.c, r: current.r + 2 },
             pushBlock = false;
@@ -241,7 +241,7 @@ Crafty.c("PlayerControls", {
     },
 
     tryMoveLeft: function() {
-        var current = SKB.player.getCoords(),
+        var current = this.getCoords(),
             next    = { c: current.c - 1, r: current.r },
             second  = { c: current.c - 2, r: current.r },
             pushBlock = false;
