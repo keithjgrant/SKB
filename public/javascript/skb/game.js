@@ -4,15 +4,13 @@
  * keithjgrant@gmail.com
  */
 
-if (typeof SKB === 'undefined') {
-    var SKB = {}
-}
+SKB = SKB || {};
 
 SKB.conf = {
     TILE:           32,
     GAME_WIDTH:     16,
     GAME_HEIGHT:    12
-}
+};
 
 SKB.LIGHT = 'light';
 SKB.DARK = 'dark';
@@ -30,9 +28,8 @@ SKB.game = function() {
         player: [0, 0],
         wall: [0, 1],
         block: [1, 0],
-        darkBlock: [0, 2],
-        lightBlock: [0, 3],
-        gate: [0, 2]
+        gate: [0, 2],
+        goal: [2, 0]
     });
 };
 SKB.game.prototype = {
@@ -76,11 +73,13 @@ SKB.map.prototype = {
      *  4 - light loop block
      *  5 - gate
      *
-     *  goals: {type:<0/1>,c,r}
+     *  goals: {color:<0/1>,c,r}
      *  player: {c, r}
      */
     deserializeLevel: function(data) {
         Crafty.scene(name, $.proxy(function() {
+            var r, c, i, j;
+
             for (r = 0; r < SKB.conf.GAME_HEIGHT; r++) {
                 for (c = 0; c < SKB.conf.GAME_WIDTH; c++) {
                     if (data.tiles[r] && data.tiles[r][c]) {
@@ -92,11 +91,13 @@ SKB.map.prototype = {
             }
 
             for (i in data.goals) {
-                this.addGoal(data.goals[i]);
+                this.addGoal(
+                    data.goals[i].c,
+                    data.goals[i].r,
+                    data.goals[i].color ? SKB.LIGHT : SKB.DARK
+                );
             }
-            for (j in data.gates) {
-                this.addGate(data.gates[j]);
-            }
+
             this.loader.player(data.player.c, data.player.r);
                     
         }, this));
@@ -121,7 +122,8 @@ SKB.map.prototype = {
         console.log("map.serializeTile() not yet implemented");
     },
 
-    addGoal: function(def) {
+    addGoal: function(c, r, color) {
+        this.loader.goal(c, r, color);
     },
 };
 

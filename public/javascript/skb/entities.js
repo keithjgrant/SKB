@@ -39,6 +39,19 @@ SKB.entityLoader.prototype = {
         return gate;
     },
 
+    goal: function(c, r, color) {
+        var g = Crafty.e("2D, DOM, goal")
+            .attr(this._attributes(c, r));
+
+        g.color = color;
+        g.z = 10;
+
+        if (color === SKB.LIGHT) {
+            // TODO
+            g.sprite(2, 1);
+        }
+    },
+
     _attributes: function(c, r) {
         return {
             x: c * SKB.conf.TILE,
