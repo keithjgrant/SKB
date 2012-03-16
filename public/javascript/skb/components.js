@@ -42,22 +42,22 @@ Crafty.c("fourwaysnap", {
                 this._motion = 0;
             } else if(this._motion) {
                 // up
-                if (this._motion == 1) {
+                if (this._motion === 1) {
                     this.y -= this._speed
                     changed = true;
                 }
                 // right
-                if (this._motion == 2) {
+                if (this._motion === 2) {
                     this.x += this._speed;
                     changed = true;
                 }
                 // down
-                if (this._motion == 3) {
+                if (this._motion === 3) {
                     this.y += this._speed;
                     changed = true;
                 }
                 // left
-                if (this._motion == 4) {
+                if (this._motion === 4) {
                     this.x -= this._speed;
                     changed = true;
                 }

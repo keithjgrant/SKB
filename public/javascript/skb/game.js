@@ -105,15 +105,15 @@ SKB.map.prototype = {
     },
 
     deserializeTile: function(c, r, tile) {
-        if (tile == 0) {
+        if (tile === 0) {
             this.loader.wall(c, r);
-        } else if (tile == 1) {
+        } else if (tile === 1) {
             this.loader.block(c, r, SKB.DARK);
-        } else if (tile == 2) {
+        } else if (tile === 2) {
             this.loader.goalBlock(c, r, SKB.DARK);
-        } else if (tile == 3) {
+        } else if (tile === 3) {
             this.loader.block(c, r, SKB.LIGHT);
-        } else if (tile == 5) {
+        } else if (tile === 5) {
             this.loader.gate(c, r);
         }
     },

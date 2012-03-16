@@ -1,6 +1,4 @@
-if (typeof SKB === 'undefined') {
-    SKB = {}
-}
+var SKB = SKB || {};
 
 SKB.entityLoader = function() {}
 SKB.entityLoader.prototype = {
