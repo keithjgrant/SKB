@@ -7,3 +7,4 @@
 * "Loading" Scene
 * Level restart button
 * Why does the page scroll?
+* Move entities.js into game.js & clean up the global namespace
