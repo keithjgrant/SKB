@@ -1,7 +1,11 @@
 var SKB = SKB || {};
 
-SKB.entityLoader = function() {}
-SKB.entityLoader.prototype = {
+SKB.EntityLoader = function(conf) {
+    this.conf = conf;
+    this.LIGHT = conf.LIGHT;
+    this.DARK = conf.DARK;
+};
+SKB.EntityLoader.prototype = {
     wall: function(c, r) {
         return Crafty.e("2D, DOM, wall")
             .attr(this._attributes(c, r));
@@ -10,9 +14,9 @@ SKB.entityLoader.prototype = {
     block: function(c, r, color) {
         var b = Crafty.e("2D, DOM, block, fourwaysnap, Collision")
             .attr(this._attributes(c, r))
-            .fourwaysnap(4, SKB.conf.TILE);
+            .fourwaysnap(4, this.conf.TILE);
         b.color = color;
-        if (color === SKB.LIGHT) {
+        if (color === this.LIGHT) {
             // TODO better place to store these coords?
             b.sprite(1, 1);
         }
@@ -21,7 +25,7 @@ SKB.entityLoader.prototype = {
     player: function(c, r) {
         var p = Crafty.e("2D, DOM, player, PlayerControls, Collision, fourwaysnap")
             .attr(this._attributes(c, r))
-            .fourwaysnap(4, SKB.conf.TILE);
+            .fourwaysnap(4, this.conf.TILE);
 
         p.onHit('wall', function() {
             this.stop();
@@ -44,7 +48,7 @@ SKB.entityLoader.prototype = {
         g.color = color;
         g.z = 10;
 
-        if (color === SKB.LIGHT) {
+        if (color === this.LIGHT) {
             // TODO
             g.sprite(2, 1);
         }
@@ -52,10 +56,10 @@ SKB.entityLoader.prototype = {
 
     _attributes: function(c, r) {
         return {
-            x: c * SKB.conf.TILE,
-            y: r * SKB.conf.TILE,
-            w: SKB.conf.TILE,
-            h: SKB.conf.TILE
+            x: c * this.conf.TILE,
+            y: r * this.conf.TILE,
+            w: this.conf.TILE,
+            h: this.conf.TILE
         }
     }
 };
