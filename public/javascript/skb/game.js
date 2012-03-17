@@ -14,27 +14,55 @@ SKB.conf = {
     DARK: 'dark'
 };
 
+// convenience functions
 SKB.util = {
 
+    /**
+     * Get the tile (block, wall, or gate) at a given coord
+     *
+     * This assumes only one tile per grid space, which is true
+     * EXCEPT during a movement animation.
+     */
     tileAt: function(c, r) {
+        var matches = this.entitiesAt(c, r, ['block', 'wall', 'gate']);
+        
+        if (matches.length) {
+            return matches[0];
+        }
+
+        return false;
+    },
+
+    // Get list of entities at a coordinate on the grid
+    entitiesAt: function(c, r, filter) {
         var coords = {
             _x: c * SKB.conf.TILE,
             _y: r * SKB.conf.TILE,
             _w: SKB.conf.TILE,
             _h: SKB.conf.TILE
         },
-            match = Crafty.map.search(coords),
-            filter = ['block', 'wall', 'gate'];
-        
-        for (entity in match) {
+            matches = Crafty.map.search(coords);
+
+        if (filter && filter instanceof Array) {
+            matches = this.filterEntitiesByComponent(matches, filter);
+        }
+
+        return matches;
+    },
+
+    // Returns array of entities that have compenents listed in filter array
+    filterEntitiesByComponent: function(entities, filter) {
+        var e, f, filtered = [];
+
+        for (e in entities) {
             for (f in filter) {
-                if (match[entity] && match[entity].has(filter[f])) {
-                    return match[entity];
+                if (entities[e].has(filter[f])) {
+                    filtered.push(entities[e]);
                 }
             }
         }
 
-        return false;
+        return filtered;
     },
 
     /**
@@ -170,12 +198,16 @@ SKB.core = (function(env) {
             });
 
             this.map = map;
+        },
+
+        levelIsComplete: function() {
         }
     };
 
     init = function() {
         var game = new Game();
         game.loadLevel(1);
+        SKB.game = game;
     };
 
     return {
