@@ -24,7 +24,7 @@ SKB.util = {
      * EXCEPT during a movement animation.
      */
     tileAt: function(c, r) {
-        var matches = this.entitiesAt(c, r, ['block', 'wall', 'gate']);
+        var matches = this.entitiesAt(c, r, ['Block', 'wall', 'gate']);
         
         if (matches.length) {
             return matches[0];
@@ -73,7 +73,7 @@ SKB.util = {
             blockB = this.tileAt(coordsB.c, coordsB.r);
 
         if (!blockA || !blockB ||
-          !blockA.has('block') || !blockB.has('block')) {
+          !blockA.has('Block') || !blockB.has('Block')) {
             return false;
         }
 
@@ -156,6 +156,29 @@ SKB.core = (function(env) {
         addGoal: function(c, r, color) {
             loader.goal(c, r, color);
         },
+
+        levelIsComplete: function() {
+            var goal,
+                i,
+                tile;
+
+            goals = Crafty("goal");
+            for (i in goals) {
+                tile = SKB.util.tileAt(goals[i].c, goals[i].r);
+
+                if (tile.color !== goals[i].color) {
+                    return false;
+                }
+            }
+
+            return true;
+        },
+
+        checkMapCompletion: function() {
+            if (this.levelIsComplete()) {
+                console.log('Level Complete! You deserve a cookie');
+            }
+        }
     };
 
     Game = function() {
@@ -198,9 +221,6 @@ SKB.core = (function(env) {
             });
 
             this.map = map;
-        },
-
-        levelIsComplete: function() {
         }
     };
 

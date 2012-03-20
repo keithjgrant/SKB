@@ -40,6 +40,10 @@ Crafty.c("fourwaysnap", {
                 this.y = this._nextSnapPos.y
                 this._ticksRemaining = 0;
                 this._motion = 0;
+
+                if (typeof this.afterMove === 'function') {
+                    this.afterMove();
+                }
             } else if(this._motion) {
                 // up
                 if (this._motion === 1) {
@@ -98,6 +102,10 @@ Crafty.c("fourwaysnap", {
     _moveToPosition: function(direction, x, y) {
         if (this._motion) {
             return;
+        }
+
+        if (typeof this.beforeMove === 'function') {
+            this.beforeMove();
         }
 
         this._motion = direction;
@@ -282,7 +290,7 @@ Crafty.c("PlayerControls", {
 
         var pushBlock = SKB.util.tileAt(to.c, to.r);
 
-        if (pushBlock && pushBlock.has('block')) {
+        if (pushBlock && pushBlock.has('Block')) {
             return pushBlock;
         }
 
@@ -290,8 +298,7 @@ Crafty.c("PlayerControls", {
     }
 });
 
-Crafty.c("block", {
-    
+Crafty.c("Block", {
     init: function() {
         if (!this.has("fourwaysnap")) {
             this.addComponent("fourwaysnap");
@@ -299,5 +306,13 @@ Crafty.c("block", {
         if (!this.has("Collision")) {
             this.addComponent("Collision");
         }
+    },
+
+    block: function(map) {
+        this.map = map;
+    },
+
+    afterMove: function() {
+       this.map.checkMapCompletion(); 
     }
 });
