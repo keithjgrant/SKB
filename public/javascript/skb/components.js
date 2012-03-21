@@ -299,6 +299,9 @@ Crafty.c("PlayerControls", {
 });
 
 Crafty.c("Block", {
+
+    map: undefined,
+
     init: function() {
         if (!this.has("fourwaysnap")) {
             this.addComponent("fourwaysnap");

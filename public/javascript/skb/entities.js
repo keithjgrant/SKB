@@ -12,12 +12,12 @@ SKB.EntityLoader.prototype = {
     },
 
     block: function(c, r, color, map) {
-        var b = Crafty.e("2D, DOM, Block, fourwaysnap, Collision")
+        var b = Crafty.e("2D, DOM, block, Block, fourwaysnap, Collision")
             .attr(this._attributes(c, r))
             .fourwaysnap(4, this.conf.TILE);
-        //b.block(map);
+        b.block(map);
 
-        //b.color = color;
+        b.color = color;
         if (color === this.LIGHT) {
             // TODO better place to store these coords?
             b.sprite(1, 1);
@@ -49,11 +49,15 @@ SKB.EntityLoader.prototype = {
 
         g.color = color;
         g.z = 10;
+        g.c = c;
+        g.r = r;
 
         if (color === this.LIGHT) {
             // TODO
             g.sprite(2, 1);
         }
+
+        return g;
     },
 
     _attributes: function(c, r) {

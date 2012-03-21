@@ -92,7 +92,9 @@ SKB.core = (function(env) {
 
     loader = new env.EntityLoader(conf);
 
-    Map = function() {};
+    Map = function() {
+        this.goals = [];
+    };
     Map.prototype = {
         /*
          *  SERIALIZED MAP FORMAT:
@@ -139,11 +141,11 @@ SKB.core = (function(env) {
             if (tile === 0) {
                 loader.wall(c, r);
             } else if (tile === 1) {
-                loader.block(c, r, DARK);
+                loader.block(c, r, DARK, this);
             } else if (tile === 2) {
-                loader.goalBlock(c, r, DARK);
+                loader.goalBlock(c, r, DARK, this);
             } else if (tile === 3) {
-                loader.block(c, r, LIGHT);
+                loader.block(c, r, LIGHT, this);
             } else if (tile === 5) {
                 loader.gate(c, r);
             }
@@ -154,19 +156,17 @@ SKB.core = (function(env) {
         },
 
         addGoal: function(c, r, color) {
-            loader.goal(c, r, color);
+            this.goals.push(loader.goal(c, r, color));
         },
 
         levelIsComplete: function() {
-            var goal,
-                i,
+            var i,
                 tile;
 
-            goals = Crafty("goal");
-            for (i in goals) {
-                tile = SKB.util.tileAt(goals[i].c, goals[i].r);
+            for (i in this.goals) {
+                tile = SKB.util.tileAt(this.goals[i].c, this.goals[i].r);
 
-                if (tile.color !== goals[i].color) {
+                if (tile.color !== this.goals[i].color) {
                     return false;
                 }
             }
