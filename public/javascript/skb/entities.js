@@ -60,6 +60,9 @@ SKB.EntityLoader.prototype = {
         return g;
     },
 
+    /**
+     * Generate attributes for a tile-sized entity
+     */
     _attributes: function(c, r) {
         return {
             x: c * this.conf.TILE,
@@ -67,6 +70,18 @@ SKB.EntityLoader.prototype = {
             w: this.conf.TILE,
             h: this.conf.TILE
         }
+    },
+
+    button: function(attributes, text, component) {
+        var b = Crafty.e("2D, DOM, Text, GameButton, " + component)
+            .attr(attributes)
+            .text(text)
+            .css({
+                backgroundColor: '#e0d6be',
+                border: '#454753 1px solid',
+                color: '#454753',
+                cursor: 'pointer'
+            });
     }
 };
 

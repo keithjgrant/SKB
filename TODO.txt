@@ -1,4 +1,3 @@
-* Create Goal component
 * Clean up pushing animation
 * Menu Scene(s)
 * Finish & polish image sprites
