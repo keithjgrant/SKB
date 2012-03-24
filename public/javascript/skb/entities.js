@@ -73,7 +73,7 @@ SKB.EntityLoader.prototype = {
     },
 
     button: function(attributes, text, component) {
-        var b = Crafty.e("2D, DOM, Text, GameButton, " + component)
+        var b = Crafty.e("2D, DOM, Text, Mouse, GameButton, " + component)
             .attr(attributes)
             .text(text)
             .css({
@@ -82,6 +82,7 @@ SKB.EntityLoader.prototype = {
                 color: '#454753',
                 cursor: 'pointer'
             });
+        return b;
     }
 };
 

@@ -140,12 +140,18 @@ SKB.core = (function(env) {
                     w: 3 * conf.TILE - 14,
                     h: conf.TILE - 14
                     }, 'reset', 'ResetButton');
+                reset.bind('Click', function() {
+                    Crafty.scene(name);
+                });
                 back = loader.button({
                     x: 2 * conf.TILE + 7,
                     y: 11 * conf.TILE + 7,
                     w: 3 * conf.TILE - 14,
                     h: conf.TILE - 14
-                    }, 'menu', 'LevelSelect');
+                    }, 'menu', 'BackButton');
+                back.bind('Click', function() {
+                    Crafty.scene('levelselect');
+                });
 
             }, this));
             Crafty.scene(name);
