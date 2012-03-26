@@ -248,6 +248,10 @@ SKB.core = (function(env) {
         }
     };
 
+    Crafty.scene('levelselect', function() {
+
+    });
+
     init = function() {
         var game = new Game();
         game.loadLevel(1);
