@@ -72,8 +72,8 @@ SKB.util = {
         var blockA = this.tileAt(coordsA.c, coordsA.r),
             blockB = this.tileAt(coordsB.c, coordsB.r);
 
-        if (!blockA || !blockB ||
-          !blockA.has('Block') || !blockB.has('Block')) {
+        if (!blockA || !blockB || !blockA.has('Block') ||
+                !blockB.has('Block')) {
             return false;
         }
 
@@ -111,7 +111,8 @@ SKB.core = (function(env) {
          */
         deserializeLevel: function(data) {
             Crafty.scene(name, $.proxy(function() {
-                var r, c, i, j;
+                var r, c, i, j,
+                    reset, back;
 
                 for (r = 0; r < conf.GAME_HEIGHT; r++) {
                     for (c = 0; c < conf.GAME_WIDTH; c++) {
@@ -132,7 +133,26 @@ SKB.core = (function(env) {
                 }
 
                 loader.player(data.player.c, data.player.r);
-                        
+
+                reset = loader.button({
+                    x: 11 * conf.TILE + 7,
+                    y: 11 * conf.TILE + 7,
+                    w: 3 * conf.TILE - 14,
+                    h: conf.TILE - 14
+                    }, 'reset', 'ResetButton');
+                reset.bind('Click', function() {
+                    Crafty.scene(name);
+                });
+                back = loader.button({
+                    x: 2 * conf.TILE + 7,
+                    y: 11 * conf.TILE + 7,
+                    w: 3 * conf.TILE - 14,
+                    h: conf.TILE - 14
+                    }, 'menu', 'BackButton');
+                back.bind('Click', function() {
+                    Crafty.scene('levelselect');
+                });
+
             }, this));
             Crafty.scene(name);
         },
@@ -185,10 +205,10 @@ SKB.core = (function(env) {
         this.map;
         this.currentMapData;
 
-        Crafty.init([
+        Crafty.init(
             conf.GAME_WIDTH * conf.TILE,
             conf.GAME_HEIGHT * conf.TILE
-        ]);
+        );
         Crafty.sprite(conf.TILE, '/images/skb/sprites.png', {
             player: [0, 0],
             wall: [0, 1],
@@ -198,6 +218,10 @@ SKB.core = (function(env) {
         });
     };
     Game.prototype = {
+        mainMenu: function() {
+            
+        },
+
         loadLevel: function(levelNum) {
             var name = 'level' + levelNum,
                 map = new Map();
@@ -223,6 +247,10 @@ SKB.core = (function(env) {
             this.map = map;
         }
     };
+
+    Crafty.scene('levelselect', function() {
+
+    });
 
     init = function() {
         var game = new Game();
