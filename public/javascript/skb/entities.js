@@ -19,8 +19,9 @@ SKB.EntityLoader.prototype = {
 
         b.color = color;
         if (color === this.LIGHT) {
-            // TODO better place to store these coords?
-            b.sprite(1, 1);
+            b.addComponent('whiteblock');
+        } else {
+            b.addComponent('blueblock');
         }
     },
 
@@ -44,8 +45,9 @@ SKB.EntityLoader.prototype = {
     },
 
     goal: function(c, r, color) {
-        var g = Crafty.e("2D, DOM, goal")
+        var g = Crafty.e("2D, DOM, SpriteAnimation, goal")
             .attr(this._attributes(c, r));
+        var row;
 
         g.color = color;
         g.z = 10;
@@ -53,9 +55,15 @@ SKB.EntityLoader.prototype = {
         g.r = r;
 
         if (color === this.LIGHT) {
-            // TODO
-            g.sprite(2, 1);
+            g.addComponent('whitegoal');
+            row = 1;
+        } else {
+            g.addComponent('bluegoal');
+            row = 2;
         }
+
+        g.animate('GoalActivate', 2, row, 5);
+        g.animate('GoalDeactivate', 5, row, 2);
 
         return g;
     },

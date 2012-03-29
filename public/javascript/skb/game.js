@@ -11,7 +11,10 @@ SKB.conf = {
     GAME_WIDTH:     16,
     GAME_HEIGHT:    12,
     LIGHT: 'light',
-    DARK: 'dark'
+    DARK: 'dark',
+    WHITE: 'white',
+    BLUE: 'blue',
+    RED: 'red'
 };
 
 // convenience functions
@@ -134,25 +137,6 @@ SKB.core = (function(env) {
 
                 loader.player(data.player.c, data.player.r);
 
-                reset = loader.button({
-                    x: 11 * conf.TILE + 7,
-                    y: 11 * conf.TILE + 7,
-                    w: 3 * conf.TILE - 14,
-                    h: conf.TILE - 14
-                    }, 'reset', 'ResetButton');
-                reset.bind('Click', function() {
-                    Crafty.scene(name);
-                });
-                back = loader.button({
-                    x: 2 * conf.TILE + 7,
-                    y: 11 * conf.TILE + 7,
-                    w: 3 * conf.TILE - 14,
-                    h: conf.TILE - 14
-                    }, 'menu', 'BackButton');
-                back.bind('Click', function() {
-                    Crafty.scene('levelselect');
-                });
-
             }, this));
             Crafty.scene(name);
         },
@@ -211,10 +195,14 @@ SKB.core = (function(env) {
         );
         Crafty.sprite(conf.TILE, '/images/skb/sprites.png', {
             player: [0, 0],
-            wall: [0, 1],
-            block: [1, 0],
-            gate: [0, 2],
-            goal: [2, 0]
+            wall: [1, 0],
+            whiteblock: [0, 1],
+            blueblock: [0, 2],
+            redblock: [0, 3],
+            gate: [2, 0],
+            whitegoal: [2, 1],
+            bluegoal: [2, 2],
+            redgoal: [2, 3]
         });
     };
     Game.prototype = {
