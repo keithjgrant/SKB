@@ -10,8 +10,6 @@ SKB.conf = {
     TILE:           32,
     GAME_WIDTH:     16,
     GAME_HEIGHT:    12,
-    LIGHT: 'light',
-    DARK: 'dark',
     WHITE: 'white',
     BLUE: 'blue',
     RED: 'red'
@@ -89,8 +87,6 @@ SKB.core = (function(env) {
         WHITE = conf.WHITE,
         BLUE = conf.BLUE,
         RED = conf.RED,
-        LIGHT = conf.LIGHT,
-        DARK = conf.DARK,
         loader,
         Game,
         Map,
