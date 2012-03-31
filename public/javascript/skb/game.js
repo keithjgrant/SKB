@@ -86,6 +86,9 @@ SKB.util = {
 
 SKB.core = (function(env) {
     var conf = SKB.conf,
+        WHITE = conf.WHITE,
+        BLUE = conf.BLUE,
+        RED = conf.RED,
         LIGHT = conf.LIGHT,
         DARK = conf.DARK,
         loader,
@@ -103,18 +106,20 @@ SKB.core = (function(env) {
          *  SERIALIZED MAP FORMAT:
          *  tiles: 16x12 array of:
          *  0 - wall
-         *  1 - dark block
-         *  2 - dark loop block
-         *  3 - light block
-         *  4 - light loop block
-         *  5 - gate
+         *  1 - blue block
+         *  2 - blue keystone
+         *  3 - white block
+         *  4 - white keystone
+         *  5 - red block
+         *  6 - red keystone
+         *  7 - gate
          *
-         *  goals: {color:<0/1>,c,r}
+         *  goals: {color:<0/1/2>,c,r}
          *  player: {c, r}
          */
         deserializeLevel: function(data) {
             Crafty.scene(name, $.proxy(function() {
-                var r, c, i, j,
+                var r, c, i, j, color,
                     reset, back;
 
                 for (r = 0; r < conf.GAME_HEIGHT; r++) {
@@ -128,10 +133,13 @@ SKB.core = (function(env) {
                 }
 
                 for (i in data.goals) {
+                    color = data.goals[i].color === 0 ? BLUE
+                          : data.goals[i].color === 1 ? WHITE
+                          : RED;
                     this.addGoal(
                         data.goals[i].c,
                         data.goals[i].r,
-                        data.goals[i].color ? LIGHT : DARK
+                        color
                     );
                 }
 
@@ -145,12 +153,18 @@ SKB.core = (function(env) {
             if (tile === 0) {
                 loader.wall(c, r);
             } else if (tile === 1) {
-                loader.block(c, r, DARK, this);
+                loader.block(c, r, BLUE, this);
             } else if (tile === 2) {
-                loader.goalBlock(c, r, DARK, this);
+                loader.keystone(c, r, BLUE, this);
             } else if (tile === 3) {
-                loader.block(c, r, LIGHT, this);
+                loader.block(c, r, WHITE, this);
+            } else if (tile === 4) {
+                loader.keystone(c, r, WHITE, this);
             } else if (tile === 5) {
+                loader.block(c, r, RED, this);
+            } else if (tile === 6) {
+                loader.keystone(c, r, RED, this);
+            } else if (tile === 7) {
                 loader.gate(c, r);
             }
         },
@@ -196,10 +210,13 @@ SKB.core = (function(env) {
         Crafty.sprite(conf.TILE, '/images/skb/sprites.png', {
             player: [0, 0],
             wall: [1, 0],
+            gate: [2, 0],
             whiteblock: [0, 1],
             blueblock: [0, 2],
             redblock: [0, 3],
-            gate: [2, 0],
+            whitekeystone: [1, 1],
+            bluekeystone: [1, 2],
+            redkeystone: [1, 3],
             whitegoal: [2, 1],
             bluegoal: [2, 2],
             redgoal: [2, 3]
