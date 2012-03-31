@@ -31,10 +31,11 @@ SKB.EntityLoader.prototype = {
     },
 
     keystone: function(c, r, color, map) {
-        var b = Craftye("2D, DOM, block, Block, fourwaysnap, Collision")
+        var b = Crafty.e("2D, DOM, block, Block, fourwaysnap, Collision")
             .attr(this._attributes(c, r))
             .fourwaysnap(4, this.conf.TILE);
         b.block(map);
+        b.keystone = true;
 
         b.color = color;
         if (color === this.WHITE) {

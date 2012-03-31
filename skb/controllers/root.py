@@ -1,4 +1,4 @@
-from pecan import expose
+from pecan import expose, override_template
 from formencode import Schema, validators as v
 from webob.exc import status_map
 
@@ -26,6 +26,11 @@ class RootController(object):
     )
     def index_post(self, name, age):
         return dict(name=name)
+
+    @expose()
+    def level(self, level):
+        override_template('levels/%s.json' % level)
+        return {}
 
     @expose('json')
     def level1(self):

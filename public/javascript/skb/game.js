@@ -223,7 +223,7 @@ SKB.core = (function(env) {
             
         },
 
-        loadLevel: function(levelNum) {
+        loadLevel: function(levelNum, callback) {
             var name = 'level' + levelNum,
                 map = new Map();
 
@@ -233,12 +233,15 @@ SKB.core = (function(env) {
                 return;
             }
 
-            $.get(name + '.json', $.proxy(function(data) {
+            $.get('level/' + name, $.proxy(function(data) {
                 Crafty.scene(name, function() {
                     map.deserializeLevel(data);
                 });
-                this.currentMapData = data;
                 Crafty.scene(name);
+                this.currentLevel = name;
+                if (typeof callback === 'function') {
+                    callback();
+                }
             }, this), 'json')
             .error(function() {
                 if (!console || !console.log) { return; }
@@ -246,6 +249,20 @@ SKB.core = (function(env) {
             });
 
             this.map = map;
+        },
+
+        editMode: function() {
+            Crafty('block').each(function() {
+                this.addComponent('Mouse');
+                this.containsPoint = function() {}
+                this.bind('MouseUp', function(e) {
+                    if (e.mouseButton === Crafty.mouseButtons.LEFT) {
+                        this.toggleColor();
+                    } else if (e.mouseButton === Crafty.mouseButtons.RIGHT) {
+                        this.toggleKeystone();
+                    }
+                });
+            });
         }
     };
 
@@ -255,7 +272,7 @@ SKB.core = (function(env) {
 
     init = function() {
         var game = new Game();
-        game.loadLevel(1);
+        //game.loadLevel(1);
         SKB.game = game;
     };
 
@@ -268,4 +285,7 @@ SKB.core = (function(env) {
 
 window.onload = function() {
     SKB.core.init();
+    SKB.game.loadLevel(1, function() {
+        SKB.game.editMode();
+    });
 }

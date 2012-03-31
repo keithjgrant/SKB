@@ -300,7 +300,7 @@ Crafty.c("PlayerControls", {
 
 Crafty.c("Block", {
 
-    map: undefined,
+    gamemap: undefined,
 
     init: function() {
         if (!this.has("fourwaysnap")) {
@@ -312,10 +312,47 @@ Crafty.c("Block", {
     },
 
     block: function(map) {
-        this.map = map;
+        this.gamemap = map;
     },
 
     afterMove: function() {
-       this.map.checkMapCompletion(); 
+       this.gamemap.checkMapCompletion(); 
+    },
+
+    // cycle to the next of three colors
+    toggleColor: function() {
+        var type;
+        if (this.keystone) {
+            type = 'keystone';
+        } else {
+            type = 'block';
+        }
+        
+        if (this.color === SKB.conf.WHITE) {
+            this.color = SKB.conf.BLUE;
+            this.removeComponent('white' + type);
+            this.addComponent('blue' + type);
+        } else if (this.color === SKB.conf.BLUE) {
+            this.color = SKB.conf.RED;
+            this.removeComponent('blue' + type);
+            this.addComponent('red' + type);
+        } else {
+            this.color = SKB.conf.WHITE;
+            this.removeComponent('red' + type);
+            this.addComponent('white' + type);
+        }
+    },
+
+    toggleKeystone: function() {
+        if (this.keystone) {
+            this.keystone = false;
+
+            this.removeComponent(this.color + 'keystone');
+            this.addComponent(this.color + 'block');
+        } else {
+            this.keystone = true;
+            this.removeComponent(this.color + 'block');
+            this.addComponent(this.color + 'keystone');
+        }
     }
 });
