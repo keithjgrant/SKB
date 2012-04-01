@@ -223,9 +223,15 @@ SKB.core = (function(env) {
             
         },
 
-        loadLevel: function(levelNum, callback) {
-            var name = 'level' + levelNum,
+        loadLevel: function(level, callback) {
+            var name,
                 map = new Map();
+
+            if (typeof level === 'number') {
+                name = 'level' + level;
+            } else {
+                name = level;
+            }
 
             if (Crafty._scenes[name]) {
                 // already loaded
@@ -286,6 +292,8 @@ SKB.core = (function(env) {
 window.onload = function() {
     SKB.core.init();
     SKB.game.loadLevel(1, function() {
-        SKB.game.editMode();
+        if (document.URL.search('#edit') !== -1) {
+            SKB.game.editMode();
+        }
     });
 }
