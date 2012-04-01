@@ -211,6 +211,8 @@ Crafty.c("PlayerControls", {
         } else if (pushBlock = this._canPush(current, next, second)) {
             var nextBlock = SKB.util.tileAt(second.c, second.r);
             this.moveUp();
+            pushBlock.z = 1;
+            nextBlock.z = 0;
             pushBlock.moveUp();
             nextBlock.moveDown();
         }
@@ -227,6 +229,8 @@ Crafty.c("PlayerControls", {
         } else if (pushBlock = this._canPush(current, next, second)) {
             var nextBlock = SKB.util.tileAt(second.c, second.r);
             this.moveRight();
+            pushBlock.z = 1;
+            nextBlock.z = 0;
             pushBlock.moveRight();
             nextBlock.moveLeft();
         }
@@ -243,6 +247,8 @@ Crafty.c("PlayerControls", {
         } else if (pushBlock = this._canPush(current, next, second)) {
             var nextBlock = SKB.util.tileAt(second.c, second.r);
             this.moveDown();
+            pushBlock.z = 1;
+            nextBlock.z = 0;
             pushBlock.moveDown();
             nextBlock.moveUp();
         }
@@ -259,6 +265,8 @@ Crafty.c("PlayerControls", {
         } else if (pushBlock = this._canPush(current, next, second)) {
             var nextBlock = SKB.util.tileAt(second.c, second.r);
             this.moveLeft();
+            pushBlock.z = 1;
+            nextBlock.z = 0;
             pushBlock.moveLeft();
             nextBlock.moveRight();
         }

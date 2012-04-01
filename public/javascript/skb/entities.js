@@ -54,6 +54,7 @@ SKB.EntityLoader.prototype = {
             .attr(this._attributes(c, r))
             .fourwaysnap(4, this.conf.TILE);
 
+        p.z = 20;
         p.onHit('wall', function() {
             this.stop();
         });
