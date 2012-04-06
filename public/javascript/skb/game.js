@@ -9,7 +9,7 @@ var SKB = SKB || {};
 SKB.conf = {
     TILE:           32,
     GAME_WIDTH:     16,
-    GAME_HEIGHT:    12,
+    GAME_HEIGHT:    13,
     WHITE: 'white',
     BLUE: 'blue',
     RED: 'red'
@@ -116,7 +116,8 @@ SKB.core = (function(env) {
         deserializeLevel: function(data) {
             Crafty.scene(name, $.proxy(function() {
                 var r, c, i, j, color,
-                    reset, back;
+                    buttonW, buttonH,
+                    reset, undo, back;
 
                 for (r = 0; r < conf.GAME_HEIGHT; r++) {
                     for (c = 0; c < conf.GAME_WIDTH; c++) {
@@ -141,21 +142,33 @@ SKB.core = (function(env) {
 
                 loader.player(data.player.c, data.player.r);
 
+                buttonW = 3 * conf.TILE - 14;
+                buttonH = conf.TILE - 14;
                 reset = loader.button({
-                    x: 11 * conf.TILE + 7,
-                    y: 11 * conf.TILE + 7,
-                    w: 3 * conf.TILE - 14,
-                    h: conf.TILE - 14
-                    }, 'reset', 'ResetButton');
+                    x: 13 * conf.TILE + 7,
+                    y: 12 * conf.TILE + 7,
+                    w: buttonW,
+                    h: buttonH
+                    }, 'Reset', 'ResetButton');
                 reset.bind('Click', function() {
                     Crafty.scene(name);
                 });
+                undo = loader.button({
+                    x: 10 * conf.TILE + 7,
+                    y: 12 * conf.TILE + 7,
+                    w: buttonW,
+                    h: buttonH
+                }, 'Undo', 'UndoButton');
+                undo.bind('Click', function() {
+                    // TODO
+                });
+                console.log(undo);
                 back = loader.button({
-                    x: 2 * conf.TILE + 7,
-                    y: 11 * conf.TILE + 7,
-                    w: 3 * conf.TILE - 14,
-                    h: conf.TILE - 14
-                    }, 'menu', 'BackButton');
+                    x: 0 * conf.TILE + 7,
+                    y: 12 * conf.TILE + 7,
+                    w: buttonW,
+                    h: buttonH
+                    }, 'Menu', 'BackButton');
                 back.bind('Click', function() {
                     Crafty.scene('levelselect');
                 });
