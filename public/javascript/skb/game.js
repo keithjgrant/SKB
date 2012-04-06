@@ -162,7 +162,6 @@ SKB.core = (function(env) {
                 undo.bind('Click', function() {
                     // TODO
                 });
-                console.log(undo);
                 back = loader.button({
                     x: 0 * conf.TILE + 7,
                     y: 12 * conf.TILE + 7,

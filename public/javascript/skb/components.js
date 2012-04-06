@@ -206,16 +206,7 @@ Crafty.c("PlayerControls", {
             second  = { c: current.c, r: current.r - 2 },
             pushBlock = false;
 
-        if (this._canMove(current, next)) {
-            this.moveUp();
-        } else if (pushBlock = this._canPush(current, next, second)) {
-            var nextBlock = SKB.util.tileAt(second.c, second.r);
-            this.moveUp();
-            pushBlock.z = 1;
-            nextBlock.z = 0;
-            pushBlock.moveUp();
-            nextBlock.moveDown();
-        }
+        this._tryMove('Up', current, next, second);
     },
 
     tryMoveRight: function() {
@@ -224,16 +215,7 @@ Crafty.c("PlayerControls", {
             second  = { c: current.c + 2, r: current.r },
             pushBlock = false;
 
-        if (this._canMove(current, next)) {
-            this.moveRight();
-        } else if (pushBlock = this._canPush(current, next, second)) {
-            var nextBlock = SKB.util.tileAt(second.c, second.r);
-            this.moveRight();
-            pushBlock.z = 1;
-            nextBlock.z = 0;
-            pushBlock.moveRight();
-            nextBlock.moveLeft();
-        }
+        this._tryMove('Right', current, next, second);
     },
 
     tryMoveDown: function() {
@@ -242,33 +224,38 @@ Crafty.c("PlayerControls", {
             second  = { c: current.c, r: current.r + 2 },
             pushBlock = false;
 
-        if (this._canMove(current, next)) {
-            this.moveDown();
-        } else if (pushBlock = this._canPush(current, next, second)) {
-            var nextBlock = SKB.util.tileAt(second.c, second.r);
-            this.moveDown();
-            pushBlock.z = 1;
-            nextBlock.z = 0;
-            pushBlock.moveDown();
-            nextBlock.moveUp();
-        }
+        this._tryMove('Down', current, next, second);
     },
 
     tryMoveLeft: function() {
         var current = this.getCoords(),
             next    = { c: current.c - 1, r: current.r },
-            second  = { c: current.c - 2, r: current.r },
-            pushBlock = false;
+            second  = { c: current.c - 2, r: current.r };
+
+        this._tryMove('Left', current, next, second);
+    },
+
+    _tryMove: function(direction, current, next, second) {
+        var pushBlock,
+            nextBlock;
 
         if (this._canMove(current, next)) {
-            this.moveLeft();
+           this['move' + direction]();
         } else if (pushBlock = this._canPush(current, next, second)) {
-            var nextBlock = SKB.util.tileAt(second.c, second.r);
-            this.moveLeft();
+            nextBlock = SKB.util.tileAt(second.c, second.r);
+            push = pushBlock['move' + direction];
+            this['move' + direction]();
             pushBlock.z = 1;
             nextBlock.z = 0;
-            pushBlock.moveLeft();
-            nextBlock.moveRight();
+            pushBlock['move' + direction]();
+
+            var opposites = {
+                'Left': 'Right',
+                'Right': 'Left',
+                'Up' : 'Down',
+                'Down': 'Up'
+            }
+            nextBlock['move' + opposites[direction]]();
         }
     },
 
