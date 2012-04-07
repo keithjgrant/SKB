@@ -263,6 +263,7 @@ Crafty.c("PlayerControls", {
             );
             pushBlock['move' + direction](function() {
                 Crafty.map.remove(nextBlock);
+                $(nextBlock._element).remove();
             });
         }
     },
