@@ -41,8 +41,9 @@ Crafty.c("fourwaysnap", {
                 this._ticksRemaining = 0;
                 this._motion = 0;
 
-                if (typeof this.afterMove === 'function') {
-                    this.afterMove();
+                if (typeof this._afterMove === 'function') {
+                    this._afterMove();
+                    this._afterMove = undefined;
                 }
             } else if(this._motion) {
                 // up
@@ -74,20 +75,20 @@ Crafty.c("fourwaysnap", {
         return this;
     },
 
-    moveUp: function() {
-        this._moveToPosition(1, this.x, this.y - this._gridSize);
+    moveUp: function(callback) {
+        this._moveToPosition(1, this.x, this.y - this._gridSize, callback);
     },
 
-    moveRight: function() {
-        this._moveToPosition(2, this.x + this._gridSize, this.y);
+    moveRight: function(callback) {
+        this._moveToPosition(2, this.x + this._gridSize, this.y, callback);
     },
 
-    moveDown: function() {
-        this._moveToPosition(3, this.x, this.y + this._gridSize);
+    moveDown: function(callback) {
+        this._moveToPosition(3, this.x, this.y + this._gridSize, callback);
     },
 
-    moveLeft: function() {
-        this._moveToPosition(4, this.x - this._gridSize, this.y);
+    moveLeft: function(callback) {
+        this._moveToPosition(4, this.x - this._gridSize, this.y, callback);
     },
 
     getCoords: function() {
@@ -99,7 +100,7 @@ Crafty.c("fourwaysnap", {
         };
     },
 
-    _moveToPosition: function(direction, x, y) {
+    _moveToPosition: function(direction, x, y, callback) {
         if (this._motion) {
             return;
         }
@@ -117,6 +118,7 @@ Crafty.c("fourwaysnap", {
             x: this.x,
             y: this.y
         };
+        this._afterMove = callback;
         this._ticksRemaining = this._ticksPerSnap;
     },
 
@@ -200,6 +202,11 @@ Crafty.c("PlayerControls", {
         });
     },
 
+    playercontrols: function(loader) {
+        // populate the entityLoader for block manipulation/duplication
+        this.loader = loader;
+    },
+
     tryMoveUp: function() {
         var current = this.getCoords(),
             next    = { c: current.c, r: current.r - 1 },
@@ -247,15 +254,16 @@ Crafty.c("PlayerControls", {
             this['move' + direction]();
             pushBlock.z = 1;
             nextBlock.z = 0;
-            pushBlock['move' + direction]();
-
-            var opposites = {
-                'Left': 'Right',
-                'Right': 'Left',
-                'Up' : 'Down',
-                'Down': 'Up'
-            }
-            nextBlock['move' + opposites[direction]]();
+            
+            this.loader.block(
+                next.c,
+                next.r,
+                nextBlock.color,
+                pushBlock.gamemap
+            );
+            pushBlock['move' + direction](function() {
+                Crafty.map.remove(nextBlock);
+            });
         }
     },
 

@@ -53,6 +53,7 @@ SKB.EntityLoader.prototype = {
         var p = Crafty.e("2D, DOM, player, PlayerControls, Collision, fourwaysnap")
             .attr(this._attributes(c, r))
             .fourwaysnap(4, this.conf.TILE);
+        p.playercontrols(this)
 
         p.z = 20;
         p.onHit('wall', function() {
