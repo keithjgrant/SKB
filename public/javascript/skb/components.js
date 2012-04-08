@@ -43,7 +43,10 @@ Crafty.c("fourwaysnap", {
 
                 if (typeof this._afterMove === 'function') {
                     this._afterMove();
-                    this._afterMove = undefined;
+                }
+                if (typeof this._afterMoveCallback === 'function') {
+                    this._afterMoveCallback();
+                    this._afterMoveCallback = undefined;
                 }
             } else if(this._motion) {
                 // up
@@ -118,7 +121,7 @@ Crafty.c("fourwaysnap", {
             x: this.x,
             y: this.y
         };
-        this._afterMove = callback;
+        this._afterMoveCallback = callback;
         this._ticksRemaining = this._ticksPerSnap;
     },
 
@@ -244,7 +247,8 @@ Crafty.c("PlayerControls", {
 
     _tryMove: function(direction, current, next, second) {
         var pushBlock,
-            nextBlock;
+            nextBlock,
+            goal;
 
         if (this._canMove(current, next)) {
            this['move' + direction]();
@@ -261,9 +265,18 @@ Crafty.c("PlayerControls", {
                 nextBlock.color,
                 pushBlock.gamemap
             );
+
+            // if pushing keystone onto goal, activate it
+            if (pushBlock.keystone) {
+                goal = SKB.util.entitiesAt(second.c, second.r, ['goal']);
+                if (goal.length && goal[0].color === pushBlock.color) {
+                    goal[0].animate('GoalActivate', 8);
+                }
+            }
+
             pushBlock['move' + direction](function() {
                 Crafty.map.remove(nextBlock);
-                $(nextBlock._element).remove();
+                $(nextBlock._element).hide();
             });
         }
     },
@@ -319,8 +332,32 @@ Crafty.c("Block", {
         this.gamemap = map;
     },
 
+    // callback for fourwaysnap component
+    beforeMove: function() {
+        if (!this.keystone) {
+            return;
+        }
+
+        // if pushing keystone off a goal, deactivate it
+        var c = Math.floor(this.x / SKB.conf.TILE),
+            r = Math.floor(this.y / SKB.conf.TILE),
+            goal = SKB.util.entitiesAt(c, r, ['goal']);
+
+        if (!goal.length) {
+            return;
+        }
+        goal = goal[0];
+        if (goal.color === this.color) {
+            goal.animate('GoalDeactivate', 8);
+        }
+    },
+
+    // callback for fourwaysnap component
     afterMove: function() {
-       this.gamemap.checkMapCompletion(); 
+        if (!this.keystone) {
+            return;
+        }
+        this.gamemap.checkMapCompletion(); 
     },
 
     // cycle to the next of three colors
