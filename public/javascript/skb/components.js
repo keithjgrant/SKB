@@ -259,12 +259,21 @@ Crafty.c("PlayerControls", {
             pushBlock.z = 1;
             nextBlock.z = 0;
             
-            this.loader.block(
-                next.c,
-                next.r,
-                nextBlock.color,
-                pushBlock.gamemap
-            );
+            if (nextBlock.keystone) {
+                this.loader.keystone(
+                    next.c,
+                    next.r,
+                    nextBlock.color,
+                    pushBlock.gamemap
+                );
+            } else {
+                this.loader.block(
+                    next.c,
+                    next.r,
+                    nextBlock.color,
+                    pushBlock.gamemap
+                );
+            }
 
             // if pushing keystone onto goal, activate it
             if (pushBlock.keystone) {
